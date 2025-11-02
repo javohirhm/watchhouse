@@ -1,0 +1,372 @@
+{% extends 'watches/base.html' %}
+
+{% block title %}{{ watch.name }} - WatchHouse{% endblock %}
+
+{% block content %}
+<style>
+    .detail-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        margin-bottom: 60px;
+    }
+    
+    /* Image Carousel */
+    .image-section {
+        position: relative;
+    }
+    
+    .carousel-container {
+        position: relative;
+        background: #141824;
+        border: 1px solid #1e2432;
+        border-radius: 20px;
+        overflow: hidden;
+        height: 500px;
+    }
+    
+    .carousel-images {
+        display: flex;
+        height: 100%;
+        transition: transform 0.5s ease;
+    }
+    
+    .carousel-image {
+        min-width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #1a1f2e 0%, #0f1420 100%);
+    }
+    
+    .carousel-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .carousel-placeholder {
+        font-size: 120px;
+        opacity: 0.3;
+    }
+    
+    .carousel-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px;
+        height: 50px;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 10;
+        backdrop-filter: blur(10px);
+    }
+    
+    .carousel-arrow:hover {
+        background: rgba(59, 130, 246, 0.8);
+        border-color: #3b82f6;
+    }
+    
+    .carousel-arrow.left {
+        left: 20px;
+    }
+    
+    .carousel-arrow.right {
+        right: 20px;
+    }
+    
+    .carousel-arrow svg {
+        width: 24px;
+        height: 24px;
+        stroke: white;
+    }
+    
+    .carousel-indicators {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 20px;
+    }
+    
+    .indicator {
+        width: 50px;
+        height: 4px;
+        background: #1e2432;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .indicator.active {
+        background: #3b82f6;
+        width: 70px;
+    }
+    
+    /* Watch Info */
+    .info-section {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .watch-brand-detail {
+        color: #3b82f6;
+        font-size: 0.95em;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 12px;
+    }
+    
+    .watch-name-detail {
+        font-size: 2.5em;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 24px;
+        line-height: 1.2;
+        letter-spacing: -1px;
+    }
+    
+    .watch-price-detail {
+        font-size: 3em;
+        color: #4ade80;
+        font-weight: 700;
+        margin-bottom: 30px;
+        letter-spacing: -1px;
+    }
+    
+    .watch-stock-detail {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 20px;
+        background: rgba(74, 222, 128, 0.1);
+        border: 1px solid rgba(74, 222, 128, 0.2);
+        border-radius: 10px;
+        font-size: 1em;
+        color: #4ade80;
+        margin-bottom: 30px;
+        font-weight: 500;
+    }
+    
+    .watch-stock-detail.out-of-stock {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+    }
+    
+    .stock-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #4ade80;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+    
+    .stock-dot.out {
+        background: #ef4444;
+        animation: none;
+    }
+    
+    .btn-order {
+        background: #4ade80;
+        font-size: 1.2em;
+        padding: 18px 40px;
+        border-radius: 12px;
+        font-weight: 600;
+        box-shadow: 0 8px 24px rgba(74, 222, 128, 0.3);
+        transition: all 0.2s;
+    }
+    
+    .btn-order:hover {
+        background: #22c55e;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(74, 222, 128, 0.4);
+    }
+    
+    .btn-order:disabled {
+        background: #1e293b;
+        color: #64748b;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+    
+    .btn-order:disabled:hover {
+        transform: none;
+    }
+    
+    /* Description Section */
+    .description-section {
+        background: #141824;
+        border: 1px solid #1e2432;
+        border-radius: 20px;
+        padding: 40px;
+    }
+    
+    .description-section h3 {
+        font-size: 1.8em;
+        color: #fff;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+    
+    .description-section p {
+        font-size: 1.1em;
+        line-height: 1.8;
+        color: #94a3b8;
+    }
+    
+    @media (max-width: 968px) {
+        .detail-layout {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        
+        .carousel-container {
+            height: 400px;
+        }
+        
+        .watch-name-detail {
+            font-size: 2em;
+        }
+        
+        .watch-price-detail {
+            font-size: 2.5em;
+        }
+    }
+</style>
+
+<a href="{% url 'catalog' %}" class="btn btn-back">← Back to Collection</a>
+
+<div class="detail-container">
+    <div class="detail-layout">
+        <!-- Image Section with Carousel -->
+        <div class="image-section">
+            <div class="carousel-container">
+                <div class="carousel-images" id="carouselImages">
+                    {% if watch.get_all_images %}
+                        {% for image in watch.get_all_images %}
+                        <div class="carousel-image">
+                            <img src="{{ image.image.url }}" alt="{{ watch.name }} - Image {{ forloop.counter }}">
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="carousel-image">
+                            <div class="carousel-placeholder">⌚</div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if watch.get_all_images.count > 1 %}
+                <div class="carousel-arrow left" onclick="moveCarousel(-1)">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </div>
+                <div class="carousel-arrow right" onclick="moveCarousel(1)">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+                {% endif %}
+            </div>
+            
+            {% if watch.get_all_images.count > 1 %}
+            <div class="carousel-indicators">
+                {% for image in watch.get_all_images %}
+                <div class="indicator {% if forloop.first %}active{% endif %}" onclick="goToSlide({{ forloop.counter0 }})"></div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Info Section -->
+        <div class="info-section">
+            <div class="watch-brand-detail">{{ watch.brand }}</div>
+            <h2 class="watch-name-detail">{{ watch.name }}</h2>
+            <div class="watch-price-detail">${{ watch.price|floatformat:0 }}</div>
+            
+            <div class="watch-stock-detail {% if watch.stock == 0 %}out-of-stock{% endif %}">
+                <span class="stock-dot {% if watch.stock == 0 %}out{% endif %}"></span>
+                {% if watch.stock > 0 %}
+                    In Stock — {{ watch.stock }} available
+                {% else %}
+                    Out of Stock
+                {% endif %}
+            </div>
+            
+            {% if watch.stock > 0 %}
+            <a href="{% url 'order_watch' watch.id %}" class="btn btn-order">Order Now</a>
+            {% else %}
+            <button class="btn btn-order" disabled>Out of Stock</button>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Description Section -->
+    <div class="description-section">
+        <h3>Description</h3>
+        <p>{{ watch.description }}</p>
+    </div>
+</div>
+
+<script>
+let currentSlide = 0;
+const totalSlides = {{ watch.get_all_images.count|default:1 }};
+
+function moveCarousel(direction) {
+    currentSlide += direction;
+    if (currentSlide < 0) currentSlide = totalSlides - 1;
+    if (currentSlide >= totalSlides) currentSlide = 0;
+    updateCarousel();
+}
+
+function goToSlide(index) {
+    currentSlide = index;
+    updateCarousel();
+}
+
+function updateCarousel() {
+    const carousel = document.getElementById('carouselImages');
+    carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    // Update indicators
+    const indicators = document.querySelectorAll('.indicator');
+    indicators.forEach((indicator, index) => {
+        if (index === currentSlide) {
+            indicator.classList.add('active');
+        } else {
+            indicator.classList.remove('active');
+        }
+    });
+}
+
+// Auto-play carousel (optional)
+{% if watch.get_all_images.count > 1 %}
+setInterval(() => {
+    moveCarousel(1);
+}, 5000);
+{% endif %}
+</script>
+
+{% endblock %}

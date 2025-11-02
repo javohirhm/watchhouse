@@ -1,0 +1,196 @@
+{% extends 'watches/base.html' %}
+
+{% block title %}Order {{ watch.name }} - WatchHouse{% endblock %}
+
+{% block content %}
+<style>
+    .order-container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .order-summary {
+        background: #141824;
+        border: 2px solid #3b82f6;
+        padding: 30px;
+        border-radius: 16px;
+        margin-bottom: 40px;
+    }
+    
+    .order-summary h3 {
+        color: #3b82f6;
+        margin-bottom: 20px;
+        font-size: 1.5em;
+        font-weight: 600;
+    }
+    
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
+        font-size: 1.1em;
+        color: #e4e4e7;
+    }
+    
+    .order-item-label {
+        color: #94a3b8;
+    }
+    
+    .order-total {
+        font-size: 1.8em;
+        font-weight: 700;
+        color: #4ade80;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #1e2432;
+    }
+    
+    .order-form {
+        background: #141824;
+        border: 1px solid #1e2432;
+        padding: 40px;
+        border-radius: 16px;
+    }
+    
+    .order-form h2 {
+        color: #fff;
+        margin-bottom: 12px;
+        font-size: 2em;
+        font-weight: 600;
+    }
+    
+    .order-form-subtitle {
+        color: #94a3b8;
+        margin-bottom: 35px;
+        font-size: 1.05em;
+    }
+    
+    .form-group {
+        margin-bottom: 28px;
+    }
+    
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #e4e4e7;
+        font-size: 0.95em;
+    }
+    
+    .form-input {
+        width: 100%;
+        padding: 14px 16px;
+        background: #0a0e1a;
+        border: 1px solid #1e2432;
+        border-radius: 10px;
+        font-size: 16px;
+        color: #e4e4e7;
+        transition: all 0.2s;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        background: #0f1420;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .form-input::placeholder {
+        color: #475569;
+    }
+    
+    .form-help {
+        font-size: 0.9em;
+        color: #64748b;
+        margin-top: 8px;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 35px;
+    }
+    
+    .btn-submit {
+        background: #4ade80;
+        flex: 1;
+        font-size: 1.1em;
+        padding: 16px;
+        font-weight: 600;
+    }
+    
+    .btn-submit:hover {
+        background: #22c55e;
+    }
+    
+    .btn-cancel {
+        background: #1e293b;
+        flex: 1;
+        border: 1px solid #334155;
+    }
+    
+    .btn-cancel:hover {
+        background: #334155;
+    }
+    
+    .form-error {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        padding: 16px 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+</style>
+
+<div class="order-container">
+    <a href="{% url 'watch_detail' watch.id %}" class="btn btn-back">← Back to Watch</a>
+    
+    <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="order-item">
+            <span class="order-item-label">Watch:</span>
+            <span>{{ watch.brand }} {{ watch.name }}</span>
+        </div>
+        <div class="order-total">
+            <div class="order-item">
+                <span>Total:</span>
+                <span>${{ watch.price|floatformat:0 }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="order-form">
+        <h2>Complete Your Order</h2>
+        <p class="order-form-subtitle">Please provide your contact information so we can process your order</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div class="form-error">
+                Please correct the errors below.
+            </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="{{ form.customer_name.id_for_label }}">Full Name *</label>
+                {{ form.customer_name }}
+                <div class="form-help">Enter your full name as it should appear on the order</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.customer_phone.id_for_label }}">Phone Number *</label>
+                {{ form.customer_phone }}
+                <div class="form-help">We'll use this number to contact you about your order</div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-submit">Place Order</button>
+                <a href="{% url 'watch_detail' watch.id %}" class="btn btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
