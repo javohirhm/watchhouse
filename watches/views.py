@@ -20,7 +20,7 @@ def order_watch(request, watch_id):
             order = form.save(commit=False)
             order.watch = watch
             order.save()
-            messages.success(request, f'Order placed successfully! We will contact you at {order.customer_phone}')
+            messages.success(request, f"Buyurtma muvaffaqiyatli qabul qilindi! {order.customer_phone} raqami orqali siz bilan bog'lanamiz.")
             return redirect('catalog')
     else:
         form = OrderForm()

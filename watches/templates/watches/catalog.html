@@ -1,6 +1,6 @@
 {% extends 'watches/base.html' %}
 
-{% block title %}Luxury Watches - WatchHouse{% endblock %}
+{% block title %}Hashamatli soatlar - WatchHouse{% endblock %}
 
 {% block content %}
 <style>
@@ -202,8 +202,8 @@
 </style>
 
 <div class="catalog-header">
-    <h2>Luxury Watch Collection</h2>
-    <p>Discover exceptional timepieces from the world's finest brands</p>
+    <h2>Hashamatli soatlar to'plami</h2>
+    <p>Dunyoning eng yaxshi brendlaridan noodatiy vaqt o'lchagichlarni kashf eting</p>
 </div>
 
 {% if watches %}
@@ -219,7 +219,7 @@
             
             {% if forloop.counter <= 3 %}
             <span class="watch-badge {% if forloop.counter == 1 %}promoted{% endif %}">
-                {% if forloop.counter == 1 %}Featured{% else %}Popular{% endif %}
+                {% if forloop.counter == 1 %}Tanlangan{% else %}Ommabop{% endif %}
             </span>
             {% endif %}
             
@@ -239,22 +239,22 @@
                 <div class="watch-stock">
                     <span class="stock-indicator {% if watch.stock == 0 %}out{% endif %}"></span>
                     {% if watch.stock > 0 %}
-                        In Stock
+                        Omborda bor
                     {% else %}
-                        Out of Stock
+                        Omborda yo'q
                     {% endif %}
                 </div>
             </div>
             
-            <a href="{% url 'watch_detail' watch.id %}" class="btn" onclick="event.stopPropagation();">View Details</a>
+            <a href="{% url 'watch_detail' watch.id %}" class="btn" onclick="event.stopPropagation();">Batafsil ma'lumot</a>
         </div>
     </div>
     {% endfor %}
 </div>
 {% else %}
 <div class="no-watches">
-    <h3>No watches available</h3>
-    <p>Please check back later for new arrivals</p>
+    <h3>Hozircha soatlar yo'q</h3>
+    <p>Yangi mahsulotlar uchun keyinroq yana tashrif buyuring</p>
 </div>
 {% endif %}
 

@@ -256,7 +256,7 @@
     }
 </style>
 
-<a href="{% url 'catalog' %}" class="btn btn-back">← Back to Collection</a>
+<a href="{% url 'catalog' %}" class="btn btn-back">← To'plamga qaytish</a>
 
 <div class="detail-container">
     <div class="detail-layout">
@@ -309,23 +309,23 @@
             <div class="watch-stock-detail {% if watch.stock == 0 %}out-of-stock{% endif %}">
                 <span class="stock-dot {% if watch.stock == 0 %}out{% endif %}"></span>
                 {% if watch.stock > 0 %}
-                    In Stock — {{ watch.stock }} available
+                    Omborda bor — {{ watch.stock }} dona
                 {% else %}
-                    Out of Stock
+                    Omborda yo'q
                 {% endif %}
             </div>
             
             {% if watch.stock > 0 %}
-            <a href="{% url 'order_watch' watch.id %}" class="btn btn-order">Order Now</a>
+            <a href="{% url 'order_watch' watch.id %}" class="btn btn-order">Buyurtma berish</a>
             {% else %}
-            <button class="btn btn-order" disabled>Out of Stock</button>
+            <button class="btn btn-order" disabled>Omborda yo'q</button>
             {% endif %}
         </div>
     </div>
     
     <!-- Description Section -->
     <div class="description-section">
-        <h3>Description</h3>
+        <h3>Tavsif</h3>
         <p>{{ watch.description }}</p>
     </div>
 </div>

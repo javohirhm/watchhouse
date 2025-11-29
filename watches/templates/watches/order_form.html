@@ -1,6 +1,6 @@
 {% extends 'watches/base.html' %}
 
-{% block title %}Order {{ watch.name }} - WatchHouse{% endblock %}
+{% block title %}{{ watch.name }} buyurtmasi - WatchHouse{% endblock %}
 
 {% block content %}
 <style>
@@ -144,50 +144,50 @@
 </style>
 
 <div class="order-container">
-    <a href="{% url 'watch_detail' watch.id %}" class="btn btn-back">← Back to Watch</a>
+    <a href="{% url 'watch_detail' watch.id %}" class="btn btn-back">← Soat sahifasiga qaytish</a>
     
     <div class="order-summary">
-        <h3>Order Summary</h3>
+        <h3>Buyurtma xulosasi</h3>
         <div class="order-item">
-            <span class="order-item-label">Watch:</span>
+            <span class="order-item-label">Soat:</span>
             <span>{{ watch.brand }} {{ watch.name }}</span>
         </div>
         <div class="order-total">
             <div class="order-item">
-                <span>Total:</span>
+                <span>Jami:</span>
                 <span>${{ watch.price|floatformat:0 }}</span>
             </div>
         </div>
     </div>
     
     <div class="order-form">
-        <h2>Complete Your Order</h2>
-        <p class="order-form-subtitle">Please provide your contact information so we can process your order</p>
+        <h2>Buyurtmani yakunlang</h2>
+        <p class="order-form-subtitle">Buyurtmani ko'rib chiqishimiz uchun kontakt ma'lumotlaringizni kiriting</p>
         
         <form method="post">
             {% csrf_token %}
             
             {% if form.errors %}
             <div class="form-error">
-                Please correct the errors below.
+                Iltimos, quyidagi xatolarni tuzating.
             </div>
             {% endif %}
             
             <div class="form-group">
-                <label for="{{ form.customer_name.id_for_label }}">Full Name *</label>
+                <label for="{{ form.customer_name.id_for_label }}">To'liq ism *</label>
                 {{ form.customer_name }}
-                <div class="form-help">Enter your full name as it should appear on the order</div>
+                <div class="form-help">Buyurtmada ko'rsatiladigan to'liq ismingizni yozing</div>
             </div>
             
             <div class="form-group">
-                <label for="{{ form.customer_phone.id_for_label }}">Phone Number *</label>
+                <label for="{{ form.customer_phone.id_for_label }}">Telefon raqami *</label>
                 {{ form.customer_phone }}
-                <div class="form-help">We'll use this number to contact you about your order</div>
+                <div class="form-help">Bu raqam orqali buyurtmangiz bo'yicha bog'lanamiz</div>
             </div>
             
             <div class="form-actions">
-                <button type="submit" class="btn btn-submit">Place Order</button>
-                <a href="{% url 'watch_detail' watch.id %}" class="btn btn-cancel">Cancel</a>
+                <button type="submit" class="btn btn-submit">Buyurtma yuborish</button>
+                <a href="{% url 'watch_detail' watch.id %}" class="btn btn-cancel">Bekor qilish</a>
             </div>
         </form>
     </div>

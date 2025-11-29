@@ -8,10 +8,10 @@ class OrderForm(forms.ModelForm):
         widgets = {
             'customer_name': forms.TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': 'Enter your full name'
+                'placeholder': "To'liq ismingizni kiriting"
             }),
             'customer_phone': forms.TextInput(attrs={
                 'class': 'form-input',
-                'placeholder': 'Enter your phone number'
+                'placeholder': 'Telefon raqamingizni kiriting'
             })
         }
